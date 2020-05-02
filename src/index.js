@@ -33,42 +33,54 @@ const movies = [
     name: 'The Dictator',
     genre: 'comedy',
     year: 2012
-  },
+  }
 ];
 
-function arrayToObject(array) {
+const arrayToObject = function(array) {
   const result = {action: [], comedy: [], drama:[]};
 
   array.forEach(element => {
     const obj = {...element};
+    const {genre} = obj;
 
-    switch (obj.genre) {
-    case 'action':
-      delete obj.genre;
-      result.action.push(obj);
-      break;
-
-    case 'comedy':
-      delete obj.genre;
-      result.comedy.push(obj);
-      break;
-
-    case 'drama':
-      delete obj.genre;
-      result.drama.push(obj);
-      break;
+    for (const key in result) {
+      if (key === genre) {
+        delete obj.genre;
+        result[key].push(obj);
+      }
     }
   });
 
   return result;
+};
+
+const moviesObj = arrayToObject(movies);
+
+moviesObj[Symbol.iterator] = function() {
+  const categories = Object.values(this);
+  let index = 0;
+  let indexCategories = 0;
+
+  return {
+    next() {
+      if (index === categories[indexCategories].length) {
+        indexCategories++;
+        // eslint-disable-next-line no-magic-numbers
+        index = 0;
+      }
+
+      if (indexCategories === categories.length) {
+        return { done: true };
+      }
+
+      return {
+        done: false,
+        value: categories[indexCategories][index++]
+      };
+    }
+  };
+};
+
+for (const movie of moviesObj) {
+  console.log(movie);
 }
-
-function iterator() {
-  const object = arrayToObject(movies);
-
-  for (const key in object) {
-    object[key].forEach(element => element.name);
-  }
-}
-
-iterator();
