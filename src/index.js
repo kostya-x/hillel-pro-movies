@@ -39,8 +39,8 @@ const movies = [
 const arrayToObject = function(array) {
   const result = {action: [], comedy: [], drama:[]};
 
-  array.forEach(element => {
-    const obj = {...element};
+  array.reduce((accamulator, currentValue) => {
+    const obj = {...currentValue};
     const {genre} = obj;
 
     for (const key in result) {
@@ -53,6 +53,8 @@ const arrayToObject = function(array) {
 
   return result;
 };
+
+arrayToObject(movies);
 
 const moviesObj = arrayToObject(movies);
 
@@ -82,5 +84,6 @@ moviesObj[Symbol.iterator] = function() {
 };
 
 for (const movie of moviesObj) {
+  // eslint-disable-next-line no-console
   console.log(movie);
 }
