@@ -37,19 +37,16 @@ const movies = [
 ];
 
 const arrayToObject = function(array) {
-  const result = {action: [], comedy: [], drama:[]};
-
-  array.reduce((accamulator, currentValue) => {
-    const obj = {...currentValue};
-    const {genre} = obj;
-
-    for (const key in result) {
-      if (key === genre) {
-        delete obj.genre;
-        result[key].push(obj);
-      }
+  const result = array.reduce((accamulator, film) => {
+    const key = film['genre'];
+    if (!accamulator[key]) {
+      accamulator[key] = [];
     }
-  });
+    delete film.genre;
+    accamulator[key].push(film);
+
+    return accamulator;
+  }, {});
 
   return result;
 };
